@@ -13,14 +13,22 @@ namespace BlogCrawler.Driver
 {
     class ArticleService : IArticleService
     {
-        private int _pageIndex;
-        private string _url;
+        private const string titleXpath = "/html[1]/head[1]/title[1]";
 
-        public ArticleService()
-        {
+        private const string articleListXpath = "//article[contains(@class,'artigo')]";
+
+        private const string articleContentXpath = "/html[1]/body[1]/div[2]/div[1]/section[1]/div[1]/article[1]";
+
+        private int _pageIndex;//= 1;
+        private string _url;// = "https://japaoemfoco.com";
+        private IArticle _article;
+
+        public ArticleService(IArticle article)
+        {                  
+            _article = article;
             _pageIndex = 1;
             _url = "https://japaoemfoco.com";
-        }
+    }
 
         /// <summary>
         /// Get page title
@@ -28,8 +36,17 @@ namespace BlogCrawler.Driver
         /// <returns>the title from the browser tab</returns>
         public string GetPageTitle()
         {
-            var htmlContent = GetPageContent(_url + @"/page/" + _pageIndex.ToString());
-            return htmlContent.DocumentNode.SelectSingleNode("/html[1]/head[1]/title[1]").InnerHtml;
+            var htmlContent = GetPageContent(ConcatURL());
+            return htmlContent.DocumentNode.SelectSingleNode(titleXpath).InnerHtml;
+        }
+
+        /// <summary>
+        /// Concats the base URI with the current URL
+        /// </summary>
+        /// <returns></returns>
+        private string ConcatURL()
+        {
+            return _url + @"/page/" + _pageIndex.ToString();
         }
 
         /// <summary>
@@ -49,9 +66,9 @@ namespace BlogCrawler.Driver
         public List<string> GetArticlesId()
         {
             List<string> articlesIdList = new List<string>();
-            HtmlDocument pageContent = GetPageContent(_url + @"/page/" + _pageIndex.ToString());
+            HtmlDocument pageContent = GetPageContent(ConcatURL());
 
-            HtmlNodeCollection articlesList = pageContent.DocumentNode.SelectNodes("//article[contains(@class,'artigo')]");
+            HtmlNodeCollection articlesList = pageContent.DocumentNode.SelectNodes(articleListXpath);
             articlesList.ToList().ForEach(x => articlesIdList.Add(x.Id));
 
             return articlesIdList;
@@ -63,7 +80,7 @@ namespace BlogCrawler.Driver
         /// <returns>An article list from the current URL</returns>
         public List<Article> GetArticleContent()
         {
-            HtmlNodeCollection articlesCollection = GetArticles(_url + @"/page/" + _pageIndex.ToString());
+            HtmlNodeCollection articlesCollection = GetArticles(ConcatURL());
             return CreateArticles(articlesCollection);
         }
 
@@ -74,7 +91,7 @@ namespace BlogCrawler.Driver
         public List<Article> GetNextPage()
         {
             _pageIndex++;
-            HtmlNodeCollection articlesCollection = GetArticles(_url + @"/page/" + _pageIndex.ToString());
+            HtmlNodeCollection articlesCollection = GetArticles(ConcatURL());
             return CreateArticles(articlesCollection);
         }
 
@@ -87,7 +104,7 @@ namespace BlogCrawler.Driver
             if (!_pageIndex.Equals(1))
                 _pageIndex--;
 
-            HtmlNodeCollection articlesCollection = GetArticles(_url + @"/page/" + _pageIndex.ToString());
+            HtmlNodeCollection articlesCollection = GetArticles(ConcatURL());
             return CreateArticles(articlesCollection);
         }
 
@@ -110,7 +127,7 @@ namespace BlogCrawler.Driver
         {
             HtmlDocument pageContent = GetPageContent(url);
 
-            return pageContent.DocumentNode.SelectNodes("//article[contains(@class,'artigo')]");
+            return pageContent.DocumentNode.SelectNodes(articleListXpath);
         }
 
         /// <summary>
@@ -143,11 +160,12 @@ namespace BlogCrawler.Driver
             string overview = "";
             string link = "";
             string imagePath = "";
-            List<Article> articlesList = new List<Article>();
+
+            List<Article> articlesList = _article.CreateArticleList();
 
             foreach (var article in articlesCollection)
             {
-                var getTagName = article.SelectSingleNode("/html[1]/body[1]/div[2]/div[1]/section[1]/div[1]/article[1]");
+                var getTagName = article.SelectSingleNode(articleContentXpath);
 
                 if (article.Name.Equals("article"))
                 {
@@ -160,7 +178,7 @@ namespace BlogCrawler.Driver
 
                     var bitmapImage = GetArticleImage(imagePath);
 
-                    Article newArticle = new Article(title, overview, link, bitmapImage);
+                    Article newArticle = _article.CreateArticle(title, overview, link, bitmapImage);
 
                     articlesList.Add(newArticle);
                 }

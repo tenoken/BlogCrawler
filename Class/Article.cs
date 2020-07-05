@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlogCrawler.Class
 {
-    public class Article : IDisposable
+    public class Article : IArticle, IDisposable
     {
         private readonly string _title;
         private readonly string _overview;
@@ -16,12 +16,14 @@ namespace BlogCrawler.Class
         private readonly Bitmap _image;
         private List<Comment> _commentsList;
 
+        private bool _disposed = false;
+
         public string Title { get { return _title; } }
         public string Overview { get { return _overview; } }
         public string Link { get { return _link; } }
         public Bitmap Image { get { return _image; }}
 
-        public List<Comment> CommentsList { get => _commentsList; set => _commentsList = value; }
+        public List<Comment> CommentsList { get => _commentsList; }
 
         public Article(string title, string overview, string link, Bitmap image = null)
         {
@@ -32,9 +34,37 @@ namespace BlogCrawler.Class
             _commentsList = new List<Comment>();
         }
 
+        public Article CreateArticle(string title, string overview, string link, Bitmap image = null)
+        {
+            return new Article(title, overview, link, image);
+        }
+
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+
+            if (!this._disposed)
+            {
+
+                if (disposing)
+                {
+                    this.Dispose();
+                }
+
+                _disposed = true;
+
+            }
+        }
+
+        public List<Article> CreateArticleList()
+        {
+            List<Article> articlesList = new List<Article>();
+            return articlesList;
         }
     }
 }

@@ -6,13 +6,37 @@ using System.Threading.Tasks;
 
 namespace BlogCrawler.Class.Abstracts
 {
-    public abstract class Report
+    public abstract class Report : IDisposable
     {
         private readonly List<Article> _articlesList;
+
+        private bool _disposed = false;
 
         public Report(List<Article> articlesList)
         {
             _articlesList = articlesList;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+
+            if (!this._disposed)
+            {
+
+                if (disposing)
+                {
+                    this.Dispose();
+                }
+
+                _disposed = true;
+
+            }
         }
     }
 }

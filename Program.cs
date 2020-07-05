@@ -2,12 +2,9 @@
 using System;
 using System.Collections.Generic;
 using SimpleInjector;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BlogCrawler.Driver;
 using BlogCrawler.Class;
-using BlogCrawler.Crawler;
 using SimpleInjector.Lifestyles;
 
 namespace BlogCrawler
@@ -42,15 +39,13 @@ namespace BlogCrawler
             container.Register<ITextReportService, TextReportService>();
             container.Register<ICSVReportService, CSVReportService>();
             container.Register<IArticleService, ArticleService>();
-            container.Register<IHomePageService, HomePageService>();
             container.Collection.Register(new Article("","",""));
-            container.Register(() => new HomePage("", new List<Article>()));
-            container.Register(() => new TestForm(new HomePageService(new ArticleService()),
-                                new CommentService(),
+            container.Register(() => new TestForm(
+                                new CommentService(new Comment("", "", "", "", "")),
                                 new SpreadSheetReportService(new List<Article>()),
                                 new TextReportService(new List<Article>()),
                                 new CSVReportService(new List<Article>()),
-                                new ArticleService()
+                                new ArticleService(new Article("","",""))
                 ));
 
             // Optionally verify the container.

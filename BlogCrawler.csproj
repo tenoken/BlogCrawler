@@ -79,12 +79,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\Abstracts\Page.cs" />
     <Compile Include="Class\Abstracts\Report.cs" />
     <Compile Include="Class\Article.cs" />
     <Compile Include="Class\Comment.cs" />
     <Compile Include="Class\CSVReportService.cs" />
-    <Compile Include="Class\HomePage.cs" />
     <Compile Include="Class\SpreadSheetReportService.cs" />
     <Compile Include="Class\TextReportService.cs" />
     <Compile Include="Client.cs">
@@ -93,13 +91,13 @@
     <Compile Include="Client.Designer.cs">
       <DependentUpon>Client.cs</DependentUpon>
     </Compile>
-    <Compile Include="Crawler\HomePageService.cs" />
     <Compile Include="Driver\ArticleService.cs" />
     <Compile Include="Driver\CommentService.cs" />
+    <Compile Include="Interfaces\IArticle.cs" />
     <Compile Include="Interfaces\IArticleService.cs" />
+    <Compile Include="Interfaces\IComment.cs" />
     <Compile Include="Interfaces\ICommentService.cs" />
     <Compile Include="Interfaces\ICSVReportService.cs" />
-    <Compile Include="Interfaces\IHomePageService.cs" />
     <Compile Include="Interfaces\ISpreadSheetReportService.cs" />
     <Compile Include="Interfaces\ITextReportService.cs" />
     <Compile Include="Program.cs" />

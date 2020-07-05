@@ -8,8 +8,10 @@ using System.Collections.Generic;
 
 namespace BlogCrawler.Driver
 {
-    public class CommentService : ICommentService, IDisposable
+    public class CommentService : ICommentService
     {
+        private const string clickScript = "arguments[0].click();";
+
         private readonly List<string> _firstNames = new List<string>
                  {
                     "Adriana",
@@ -97,7 +99,14 @@ namespace BlogCrawler.Driver
 
         private Random random = new Random();
 
+        private readonly IComment _comment;
+
         private ChromeDriver driver { get; set; }
+
+        public CommentService(IComment comment)
+        {
+            _comment = comment;
+        }
 
         /// <summary>
         /// Post a comment for all articles in the page
@@ -136,7 +145,7 @@ namespace BlogCrawler.Driver
 
                 var article = driver.FindElementById(id);
                 article = article.FindElement(By.ClassName("readmore"));
-                driver.ExecuteScript("arguments[0].click();", article);           
+                driver.ExecuteScript(clickScript, article);           
 
                 // Waits for the document load successfuly
                 wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("comment")));
@@ -182,7 +191,7 @@ namespace BlogCrawler.Driver
                 emailNumber = random.Next(1000, 9999).ToString();
                 emailSufix = _emailSufixes.ToArray().GetValue(indedxEmail).ToString();
 
-                Comment objComment = new Comment(firstName, lastName, emailNumber, emailSufix, commentText);
+                Comment objComment = _comment.CreateComment(firstName, lastName, emailNumber, emailSufix, commentText);
 
                 commentsList.Add(objComment);
             };
@@ -213,8 +222,7 @@ namespace BlogCrawler.Driver
         /// <returns>Formated author name, with initals letters to upper. Example: John Smith</returns>
         private string FormatAuthor(Comment comment)
         {
-            var lastNameToLower = comment.LastName.ToString().Substring(1).ToLower();
-            return string.Format("{0} {1}", comment.FirstName, comment.LastName.ToString().Substring(0)[0] + lastNameToLower);
+            return _comment.FormatAuthor(comment);
         }
 
         /// <summary>
@@ -224,9 +232,8 @@ namespace BlogCrawler.Driver
         /// <returns>Formated email. Example: fistnamelastname1234@domain.com</returns>
         private string FormatEmail(Comment comment)
         {
-            return string.Format("{0}{1}{2}@{3}", comment.FirstName.ToLower(), comment.LastName.ToLower(), comment.EmailNumber, comment.EmailSufix).Trim();
+            return _comment.FormatEmail(comment);
         }
-
 
         /// <summary>
         /// Get comment text
@@ -235,7 +242,7 @@ namespace BlogCrawler.Driver
         /// <returns>The comment text</returns>
         private string GetComment(Comment comment)
         {
-            return comment.CommentText;
+            return _comment.GetComment(comment);
         }
 
         /// <summary>
@@ -245,12 +252,7 @@ namespace BlogCrawler.Driver
         {
             var submit = driver.FindElementById("submit");
             submit.Click();
-            driver.ExecuteScript("arguments[0].click();", submit);
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
+            driver.ExecuteScript(clickScript, submit);
         }
     }
 }

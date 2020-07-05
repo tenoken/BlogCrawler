@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace BlogCrawler.Class
 {
-    public sealed class CSVReportService : Report, ICSVReportService, IDisposable
+    public sealed class CSVReportService : Report, ICSVReportService
     {
         private readonly List<Article> _articlesList;
         private readonly string _path = @"D:\Projects\WebScraping\WebScrapingDemo\WebScrapingDemo\Relatorios\";
 
+        // TODO: Remove load from constructor, once the private list became useless 
         public List<Article> ArticlesList => _articlesList;
 
         public CSVReportService(List<Article> articlesList) : base(articlesList)
@@ -25,34 +26,85 @@ namespace BlogCrawler.Class
         {
             try
             {
-                // Set Path
+
                 Directory.CreateDirectory(_path);
-                // Format file name with valid chars
-                string date = DateTime.Now.Date.ToString().Replace('/', '-').Replace(':', '-');
+
+                string date = DateTime.Now.Date.ToString("dd/MM/yyyy").Replace('/', '-');
                 string file = Path.Combine(_path, $"Report_{date}.csv");
                 File.Create(file).Dispose();
 
                 var line = new StringBuilder();
                 List<string> linesList = new List<string>();
 
-                foreach (var article in _articlesList)
+                foreach (var article in articlesList)
                 {
                     line.Append($"{article.Title},{article.Overview},{article.Link}\n");
                 }
 
-                File.WriteAllLines(file, linesList);
+                linesList.Add(line.ToString());
+
+                File.WriteAllLines(file, linesList, new UTF8Encoding(true));
 
                 return true;
             }
-            catch (Exception)
+            catch (ArgumentNullException ex)
             {
+                var customMessage = "The path argument is null.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                var customMessage = "There is an error within path argument.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+                return false;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                var customMessage = "The access to this path was unauthorized.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+                return false;
+            }
+            catch (PathTooLongException ex)
+            {
+                var customMessage = "The reffered path is too long.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+                return false;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                var customMessage = "The reffered directory was not found.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+                return false;
+            }
+            catch (IOException ex)
+            {
+                var customMessage = "An error occurred while creating the file.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+                return false;
+            }
+            catch (NotSupportedException ex)
+            {
+                var customMessage = "Not supported output.";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                var customMessage = "An error occurred";
+                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
                 return false;
             }
         }
 
-        public void Dispose()
+        private string WriteExceptionMessage(string customExceptionMessage, Exception ex)
         {
-            throw new NotImplementedException();
+            return string.Format($"TextReportService: {customExceptionMessage} \n " +
+                $"Message: {ex.Message} \n " +
+                $"Source: {ex.Source} \n " +
+                $"StackTrace: {ex.StackTrace} \n " +
+                $"TargetSite: {ex.TargetSite}");
         }
     }
 }

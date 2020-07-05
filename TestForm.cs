@@ -1,23 +1,12 @@
-﻿using BlogCrawler.Class;
-using BlogCrawler.Crawler;
-using BlogCrawler.Driver;
-using BlogCrawler.Interfaces;
+﻿using BlogCrawler.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BlogCrawler
 {
     public partial class TestForm : Form
     {
-        private readonly IHomePageService _homePageService;
-
         private readonly ICommentService _commentService;
 
         private readonly ISpreadSheetReportService _spreadSheetReportService;
@@ -28,16 +17,10 @@ namespace BlogCrawler
 
         private readonly IArticleService _articleService;
 
-        //public TestForm()
-        //{
-        //    InitializeComponent();
-        //}
-
-        public TestForm(IHomePageService homePageService, ICommentService commentService, 
+        public TestForm(ICommentService commentService, 
                         ISpreadSheetReportService spreadSheetReportService, ITextReportService textReportService, 
                         ICSVReportService cSVReportService, IArticleService articleService)
         {
-            _homePageService = homePageService;
             _commentService = commentService;
             _spreadSheetReportService = spreadSheetReportService;
             _textReportService = textReportService;
@@ -52,8 +35,6 @@ namespace BlogCrawler
             
             var articles = _articleService.GetArticleContent();
             var title = _articleService.GetPageTitle();
-
-            //var homepage = _homePageService.CreateHomePage(title, articles);
         }
 
         private void button3_Click(object sender, EventArgs e)

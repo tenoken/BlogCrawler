@@ -1,15 +1,17 @@
 ﻿using BlogCrawler.Class;
-using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BlogCrawler.Interfaces
 {
-    public interface IHomePageService 
+    public interface IArticle
     {
-        HomePage CreateHomePage(string title, List<Article> articles);
+        Article CreateArticle(string title, string overview, string link, Bitmap image = null);
+
+        List<Article> CreateArticleList();
     }
 }
