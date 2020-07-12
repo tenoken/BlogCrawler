@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1022
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrapingDemo", "WebScrapingDemo\WebScrapingDemo.csproj", "{1ABAA3C8-C9EA-4B85-9CD5-9F6EEA92C759}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogCrawler", "BlogCrawler\BlogCrawler.csproj", "{88DF08DA-43D2-4630-A936-D7606AF0AAEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1ABAA3C8-C9EA-4B85-9CD5-9F6EEA92C759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ABAA3C8-C9EA-4B85-9CD5-9F6EEA92C759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ABAA3C8-C9EA-4B85-9CD5-9F6EEA92C759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ABAA3C8-C9EA-4B85-9CD5-9F6EEA92C759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88DF08DA-43D2-4630-A936-D7606AF0AAEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88DF08DA-43D2-4630-A936-D7606AF0AAEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88DF08DA-43D2-4630-A936-D7606AF0AAEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88DF08DA-43D2-4630-A936-D7606AF0AAEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {624B5992-F8A5-4915-9AC0-3622B014591D}
+	EndGlobalSection
+EndGlobal
