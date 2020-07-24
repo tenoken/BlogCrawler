@@ -11,18 +11,13 @@ using System.Threading.Tasks;
 namespace BlogCrawler.Class
 {
     public sealed class SpreadSheetReportService : Report, ISpreadSheetReportService
-    {
-        private readonly List<Article> _articlesList;
-        private readonly string _path = @"D:\Projects\WebScraping\WebScrapingDemo\WebScrapingDemo\Relatorios\";
+    {       
 
-        public List<Article> ArticlesList => _articlesList;
-
-        public SpreadSheetReportService(List<Article> articlesList) : base(articlesList)
+        public SpreadSheetReportService() : base()
         {
-            _articlesList = articlesList;
         }
 
-        public bool CreateReport(List<Article> articlesList)
+        public void CreateReport(List<Article> articlesList, string path)
         {
             try
             {
@@ -57,70 +52,27 @@ namespace BlogCrawler.Class
                     }
 
                     string date = DateTime.Now.Date.ToString("dd/MM/yyyy").Replace('/', '-'); 
-                    string file = Path.Combine(_path, $"Report_{date}.xlsx");
+                    string file = Path.Combine(path, $"Report_{date}.xlsx");
                     File.WriteAllBytes(file, excelPackage.GetAsByteArray());
                 }
 
-                return true;
             }
             catch (ArgumentNullException ex)
             {
-                var customMessage = "The path argument is null.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
+                throw ex;
             }
             catch (ArgumentException ex)
             {
-                var customMessage = "There is an error within path argument.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                var customMessage = "The access to this path was unauthorized.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
-            }
-            catch (PathTooLongException ex)
-            {
-                var customMessage = "The reffered path is too long.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
+                throw ex;
             }
             catch (DirectoryNotFoundException ex)
             {
-                var customMessage = "The reffered directory was not found.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
-            }
-            catch (IOException ex)
-            {
-                var customMessage = "An error occurred while creating the file.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
-            }
-            catch (NotSupportedException ex)
-            {
-                var customMessage = "Not supported output.";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-
-                return false;
+                throw ex;
             }
             catch (Exception ex)
             {
-                var customMessage = "An error occurred";
-                Console.WriteLine(WriteExceptionMessage(customMessage, ex));
-                return false;
+                throw ex;
             }
-        }
-
-        private string WriteExceptionMessage(string customExceptionMessage, Exception ex)
-        {
-            return string.Format($"TextReportService: {customExceptionMessage} \n " +
-                $"Message: {ex.Message} \n " +
-                $"Source: {ex.Source} \n " +
-                $"StackTrace: {ex.StackTrace} \n " +
-                $"TargetSite: {ex.TargetSite}");
         }
     }
 }

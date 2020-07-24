@@ -1,7 +1,10 @@
 ﻿using BlogCrawler.Interfaces;
+using NLog;
+using NLog.Fluent;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -19,6 +22,8 @@ namespace WebScrapingDemo
         private readonly ICSVReportService _cSVReportService;
 
         private readonly IArticleService _articleService;
+
+        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 
         public MainForm(ICommentService commentService,
                         ISpreadSheetReportService spreadSheetReportService, ITextReportService textReportService,
@@ -63,22 +68,60 @@ namespace WebScrapingDemo
 
         private void buttonTextReport_Click(object sender, EventArgs e)
         {
-            var articles = _articleService.GetArticleContent();
 
-            if (_textReportService.CreateReport(articles))
-                MessageBox.Show("Saved successufuly!");
-            else
-                MessageBox.Show("An error occurred while creating the report.");
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                    var articles = _articleService.GetArticleContent();
+
+                    try
+                    {
+                        _textReportService.CreateReport(articles, fbd.SelectedPath);
+
+                        MessageBox.Show("Saved successufuly!");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, ex.Message);
+                        MessageBox.Show("An error occurred while creating the report.");
+                    }
+                }
+
+            }
         }
 
         private void buttonSheetReport_Click(object sender, EventArgs e)
         {
-            var articles = _articleService.GetArticleContent();
 
-            if (_spreadSheetReportService.CreateReport(articles))
-                MessageBox.Show("Saved successufuly!");
-            else
-                MessageBox.Show("An error occurred while creating the report.");
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                    var articles = _articleService.GetArticleContent();
+
+                    try
+                    {
+                        _spreadSheetReportService.CreateReport(articles, fbd.SelectedPath);
+
+                        MessageBox.Show("Saved successufuly!");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, ex.Message);
+                        MessageBox.Show("An error occurred while creating the report.");
+                    }
+                }
+
+            }
         }
 
         private void buttonGetPrevious_Click(object sender, EventArgs e)
@@ -95,12 +138,31 @@ namespace WebScrapingDemo
 
         private void buttonCSVReport_Click(object sender, EventArgs e)
         {
-            var articles = _articleService.GetArticleContent();
 
-            if (_cSVReportService.CreateReport(articles))
-                MessageBox.Show("Saved successufuly!");
-            else
-                MessageBox.Show("An error occurred while creating the report.");
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+                    var articles = _articleService.GetArticleContent();
+
+                    try
+                    {
+                        _cSVReportService.CreateReport(articles, fbd.SelectedPath);
+
+                        MessageBox.Show("Saved successufuly!");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, ex.Message);
+                        MessageBox.Show("An error occurred while creating the report.");
+                    }
+                }
+
+            }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -129,6 +191,12 @@ namespace WebScrapingDemo
         private void label2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            var aboutForm = new About();
+            aboutForm.Show();
         }
     }
 }

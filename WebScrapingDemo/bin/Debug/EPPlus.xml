@@ -22250,6 +22250,16 @@
             </summary>
             <param name="value">the value</param>
         </member>
+        <member name="M:OfficeOpenXml.ExcelRangeBase.ClearFormulas">
+            <summary>
+            Removes all formulas within the range, but keeps the calculated values.
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelRangeBase.ClearFormulaValues">
+            <summary>
+            Removes all values of cells with formulas, but keeps the formulas.
+            </summary>
+        </member>
         <member name="P:OfficeOpenXml.ExcelRangeBase.ConditionalFormatting">
             <summary>
             Conditional Formatting for this range.
@@ -23231,6 +23241,11 @@
             Use Workbook.CreateVBAProject to create a new VBA-Project
             </summary>
         </member>
+        <member name="M:OfficeOpenXml.ExcelWorkbook.RemoveVBAProject">
+            <summary>
+            Remove the from the file VBA project.
+            </summary>
+        </member>
         <member name="M:OfficeOpenXml.ExcelWorkbook.CreateVBAProject">
             <summary>
             Create an empty VBA project.
@@ -23326,6 +23341,16 @@
             Is their any names in the workbook or in the sheets.
             </summary>
             <returns>?</returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorkbook.ClearFormulas">
+            <summary>
+            Removes all formulas within the entire workbook, but keeps the calculated values.
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorkbook.ClearFormulaValues">
+            <summary>
+            Removes all values of cells with formulas in the entire workbook, but keeps the formulas.
+            </summary>
         </member>
         <member name="M:OfficeOpenXml.ExcelWorkbook.Dispose">
             <summary>
@@ -23433,6 +23458,16 @@
         <member name="T:OfficeOpenXml.ExcelWorksheet">
             <summary>
             Represents an Excel worksheet and provides access to its properties and methods
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.ClearFormulas">
+            <summary>
+            Removes all formulas within the entire worksheet, but keeps the calculated values.
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.ClearFormulaValues">
+            <summary>
+            Removes all values of cells with formulas in the entire worksheet, but keeps the formulas.
             </summary>
         </member>
         <member name="T:OfficeOpenXml.ExcelWorksheet.MergeCellsCollection">
@@ -25429,6 +25464,26 @@
             <summary>
             Simple implementation of TimeValue function, just using .NET built-in
             function System.DateTime.TryParse, based on current culture
+            </summary>
+        </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering.Conversions">
+            <summary>
+            This static class contains all the setup, definitions and methods needed for Excel's Convert function
+            </summary>
+        </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering.Conversions.UnitTypes">
+            <summary>
+            Types of mapping groups
+            </summary>
+        </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering.Conversions.Unit">
+            <summary>
+            A mapping definition
+            </summary>
+        </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering.Conversions.Prefix">
+            <summary>
+            Represents a prefix and its value, such as the k in km (kilo-meters).
             </summary>
         </member>
         <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.ErrorHandlingFunction">

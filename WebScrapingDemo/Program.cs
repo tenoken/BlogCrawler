@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using static WebScrapingDemo.MainForm;
 
 namespace WebScrapingDemo
 {
@@ -46,9 +46,9 @@ namespace WebScrapingDemo
             container.Collection.Register(new Article("", "", ""));
             container.Register(() => new MainForm(
                                 new CommentService(new Comment("", "", "", "", "")),
-                                new SpreadSheetReportService(new List<Article>()),
-                                new TextReportService(new List<Article>()),
-                                new CSVReportService(new List<Article>()),
+                                new SpreadSheetReportService(),
+                                new TextReportService(),
+                                new CSVReportService(),
                                 new ArticleService(new Article("", "", ""))
                 ));
 

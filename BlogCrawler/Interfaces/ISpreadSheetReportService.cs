@@ -9,6 +9,6 @@ namespace BlogCrawler.Interfaces
 {
     public interface ISpreadSheetReportService
     {
-        bool CreateReport(List<Article> articlesList);
+        void CreateReport(List<Article> articlesList, string path);
     }
 }

@@ -12,9 +12,9 @@ namespace BlogCrawler.Class.Abstracts
 
         private bool _disposed = false;
 
-        public Report(List<Article> articlesList)
+        public Report()
         {
-            _articlesList = articlesList;
+            //_articlesList = articlesList;
         }
 
         public void Dispose()
