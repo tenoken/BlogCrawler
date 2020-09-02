@@ -5,6 +5,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace BlogCrawler.Driver
 {
@@ -114,13 +115,13 @@ namespace BlogCrawler.Driver
         /// <param name="articlesIdList">article's ids</param>
         /// <param name="articlesList">list of article to be commented</param>
         /// <param name="url">URL to be crawled. Must be the same of the articles list</param>
-        public void PostComment(List<string> articlesIdList, List<Article> articlesList, string url)
+        public void PostComment(List<string> articlesIdList, List<Article> articlesList, string url, CancellationToken token)
         {
 
             driver = new ChromeDriver();
             driver.Navigate().GoToUrl(url);
 
-            CreateComment(articlesIdList, articlesList);
+            CreateComment(articlesIdList, articlesList, token);
 
             driver.Navigate().Back();
             driver.Dispose();
@@ -131,41 +132,54 @@ namespace BlogCrawler.Driver
         /// </summary>
         /// <param name="idList">article's id list</param>
         /// <param name="articlesList">article list that contais comments to be posted</param>
-        private void CreateComment(List<string> idList, List<Article> articlesList)
+        private void CreateComment(List<string> idList, List<Article> articlesList, CancellationToken token)
         {
 
-            int index = 0;
-
-            foreach (var id in idList)
+            try
             {
+                int index = 0;
 
-                // Waits for the document load successfuly
-                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(10000));
-                wait.Until(ExpectedConditions.ElementToBeClickable(By.Id(id)));
-
-                var article = driver.FindElementById(id);
-                article = article.FindElement(By.ClassName("readmore"));
-                driver.ExecuteScript(clickScript, article);           
-
-                // Waits for the document load successfuly
-                wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("comment")));
-                var commentLocation = driver.FindElementById("comment");
-
-                var comments = articlesList[index].CommentsList;                
-
-                foreach (var cmt in comments)
+                foreach (var id in idList)
                 {
+                    if (token.IsCancellationRequested)
+                        token.ThrowIfCancellationRequested();
 
-                    FillPostFields(cmt, commentLocation);
+                    // Waits for the document load successfuly
+                    var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(10000));
+                    wait.Until(ExpectedConditions.ElementToBeClickable(By.Id(id)));
 
+                    var article = driver.FindElementById(id);
+                    article = article.FindElement(By.ClassName("readmore"));
+                    driver.ExecuteScript(clickScript, article);
+
+                    // Waits for the document load successfuly
+                    wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("comment")));
+                    var commentLocation = driver.FindElementById("comment");
+
+                    var comments = articlesList[index].CommentsList;
+
+                    foreach (var cmt in comments)
+                    {
+                        if (token.IsCancellationRequested)
+                            token.ThrowIfCancellationRequested();
+
+                        FillPostFields(cmt, commentLocation);
+
+                    }
+
+                    // Uncomment the line bellow to post the created comment
+                    //SubmitComment();
+
+                    driver.Navigate().Back();
+                    index++;
                 }
-
-                // Uncomment the line bellow to post the created comment
-                //SubmitComment();
-
-                driver.Navigate().Back();
-                index++;
             }
+            catch (OperationCanceledException ex)
+            {
+                driver.Dispose();
+                throw new OperationCanceledException(ex.Message);
+            }
+
         }
 
         /// <summary>

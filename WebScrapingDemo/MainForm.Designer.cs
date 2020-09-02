@@ -46,15 +46,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonCSVReport = new System.Windows.Forms.Button();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.processStatusLabel = new System.Windows.Forms.Label();
+            this.stopButton = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.geishaGif = new System.Windows.Forms.PictureBox();
+            this.sharinGif = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.stopLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stopButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.geishaGif)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sharinGif)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -148,6 +151,7 @@
             // 
             this.buttonTextReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonTextReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(18)))), ((int)(((byte)(33)))));
+            this.buttonTextReport.Enabled = false;
             this.buttonTextReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonTextReport.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold);
             this.buttonTextReport.ForeColor = System.Drawing.Color.White;
@@ -164,6 +168,7 @@
             // 
             this.buttonSheetReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSheetReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(18)))), ((int)(((byte)(33)))));
+            this.buttonSheetReport.Enabled = false;
             this.buttonSheetReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSheetReport.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold);
             this.buttonSheetReport.ForeColor = System.Drawing.Color.White;
@@ -263,6 +268,7 @@
             // 
             this.buttonCSVReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCSVReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(18)))), ((int)(((byte)(33)))));
+            this.buttonCSVReport.Enabled = false;
             this.buttonCSVReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCSVReport.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold);
             this.buttonCSVReport.ForeColor = System.Drawing.Color.White;
@@ -275,6 +281,30 @@
             this.buttonCSVReport.UseVisualStyleBackColor = false;
             this.buttonCSVReport.Click += new System.EventHandler(this.buttonCSVReport_Click);
             // 
+            // processStatusLabel
+            // 
+            this.processStatusLabel.AutoSize = true;
+            this.processStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.processStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(217)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
+            this.processStatusLabel.Location = new System.Drawing.Point(367, 540);
+            this.processStatusLabel.Name = "processStatusLabel";
+            this.processStatusLabel.Size = new System.Drawing.Size(43, 13);
+            this.processStatusLabel.TabIndex = 15;
+            this.processStatusLabel.Text = "Status";
+            this.processStatusLabel.Visible = false;
+            // 
+            // stopButton
+            // 
+            this.stopButton.Image = global::WebScrapingDemo.Properties.Resources.stop;
+            this.stopButton.Location = new System.Drawing.Point(677, 540);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(21, 21);
+            this.stopButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.stopButton.TabIndex = 16;
+            this.stopButton.TabStop = false;
+            this.stopButton.Visible = false;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
             // pictureBox4
             // 
             this.pictureBox4.Image = global::WebScrapingDemo.Properties.Resources.about;
@@ -286,27 +316,28 @@
             this.pictureBox4.TabStop = false;
             this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
-            // pictureBox3
+            // geishaGif
             // 
-            this.pictureBox3.Image = global::WebScrapingDemo.Properties.Resources.tenor;
-            this.pictureBox3.Location = new System.Drawing.Point(29, 65);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(926, 345);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 13;
-            this.pictureBox3.TabStop = false;
+            this.geishaGif.Image = global::WebScrapingDemo.Properties.Resources.tenor;
+            this.geishaGif.Location = new System.Drawing.Point(29, 65);
+            this.geishaGif.Name = "geishaGif";
+            this.geishaGif.Size = new System.Drawing.Size(926, 345);
+            this.geishaGif.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.geishaGif.TabIndex = 13;
+            this.geishaGif.TabStop = false;
+            this.geishaGif.Visible = false;
             // 
-            // pictureBox2
+            // sharinGif
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.White;
-            this.pictureBox2.Image = global::WebScrapingDemo.Properties.Resources.unnamed;
-            this.pictureBox2.Location = new System.Drawing.Point(314, 430);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(76, 60);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 12;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Visible = false;
+            this.sharinGif.BackColor = System.Drawing.Color.White;
+            this.sharinGif.Image = global::WebScrapingDemo.Properties.Resources.unnamed;
+            this.sharinGif.Location = new System.Drawing.Point(285, 516);
+            this.sharinGif.Name = "sharinGif";
+            this.sharinGif.Size = new System.Drawing.Size(76, 60);
+            this.sharinGif.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.sharinGif.TabIndex = 12;
+            this.sharinGif.TabStop = false;
+            this.sharinGif.Visible = false;
             // 
             // pictureBox1
             // 
@@ -318,17 +349,17 @@
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             // 
-            // processStatusLabel
+            // stopLabel
             // 
-            this.processStatusLabel.AutoSize = true;
-            this.processStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.processStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(217)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
-            this.processStatusLabel.Location = new System.Drawing.Point(405, 452);
-            this.processStatusLabel.Name = "processStatusLabel";
-            this.processStatusLabel.Size = new System.Drawing.Size(43, 13);
-            this.processStatusLabel.TabIndex = 15;
-            this.processStatusLabel.Text = "Status";
-            this.processStatusLabel.Visible = false;
+            this.stopLabel.AutoSize = true;
+            this.stopLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold);
+            this.stopLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(217)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
+            this.stopLabel.Location = new System.Drawing.Point(674, 516);
+            this.stopLabel.Name = "stopLabel";
+            this.stopLabel.Size = new System.Drawing.Size(37, 13);
+            this.stopLabel.TabIndex = 17;
+            this.stopLabel.Text = "Parar";
+            this.stopLabel.Visible = false;
             // 
             // MainForm
             // 
@@ -337,10 +368,12 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(985, 573);
+            this.Controls.Add(this.stopLabel);
+            this.Controls.Add(this.stopButton);
             this.Controls.Add(this.processStatusLabel);
             this.Controls.Add(this.pictureBox4);
-            this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.geishaGif);
+            this.Controls.Add(this.sharinGif);
             this.Controls.Add(this.buttonCSVReport);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -363,9 +396,10 @@
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stopButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.geishaGif)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sharinGif)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -390,10 +424,12 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonCSVReport;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox sharinGif;
+        private System.Windows.Forms.PictureBox geishaGif;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Label processStatusLabel;
+        private System.Windows.Forms.PictureBox stopButton;
+        private System.Windows.Forms.Label stopLabel;
     }
 }
 

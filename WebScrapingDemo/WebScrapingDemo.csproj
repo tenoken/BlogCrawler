@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Resources\stop.png" />
     <None Include="Resources\tenor.gif" />
     <None Include="Resources\about.png" />
     <None Include="Resources\News-japanese.gif" />

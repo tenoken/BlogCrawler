@@ -53,11 +53,9 @@ namespace BlogCrawler.Class
 
                 if (disposing)
                 {
-                    this.Dispose();
+                    //this.Dispose();
+                    _disposed = true;
                 }
-
-                _disposed = true;
-
             }
         }
 
