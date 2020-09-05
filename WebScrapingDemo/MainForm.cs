@@ -15,7 +15,7 @@ namespace WebScrapingDemo
 {
     public partial class MainForm : Form
     {
-        //TODO: refactory all duplicated lines. DON'T FORGET, THIS IS HIGHLY NECESSARY
+
         private readonly ICommentService _commentService;
 
         private readonly ISpreadSheetReportService _spreadSheetReportService;
@@ -28,43 +28,34 @@ namespace WebScrapingDemo
 
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 
-        //delegate void EnableReportButtonsFuncionality();
-
-        //delegate void DisableReportButtonsFuncionality();
-
         delegate void InsertRowGridFuncionality(string title, string overview, string link, Bitmap image);
 
-        delegate void ClearGridRows();
-
-        CancellationTokenSource _source = new CancellationTokenSource();
+        private CancellationTokenSource _source;
 
         public MainForm(ICommentService commentService,
                         ISpreadSheetReportService spreadSheetReportService, ITextReportService textReportService,
-                        ICSVReportService cSVReportService, IArticleService articleService)
+                        ICSVReportService cSVReportService, IArticleService articleService, CancellationTokenSource source)
         {
             _commentService = commentService;
             _spreadSheetReportService = spreadSheetReportService;
             _textReportService = textReportService;
             _cSVReportService = cSVReportService;
             _articleService = articleService;
+            _source = source;
 
             InitializeComponent();
         }
 
+        #region Events
+
         private async void buttonUpdate_Click(object sender, EventArgs e)
         {
 
-            EnableGeishaGif();
-            ShowProcessStatusLabel();
-            EnableSharinGif();
-            EnableStopButton();
-            EnableStopLabel();
-
-            dataGridView1.Rows.Clear();
-
             _source = new CancellationTokenSource();
+            var blogPosts = new Task(() => { });
 
-            var blogPosts = new Task(() => { } );
+            EnableAnimations();
+            ClearGridRows();
 
             try
             {
@@ -93,66 +84,19 @@ namespace WebScrapingDemo
             }
             finally
             {
-                DisableGeishaGif();
-                HideProcessStatusLabel();         
-                DisableSharinGif();
-                DisableStopLabel();              
-                DisableStopButton();
+                DisableAnimations();
                 _source.Dispose();
 
-                if(!blogPosts.IsCanceled)
-                {
-                    EnableReportButtons();
-                    EnablePostCommentButton();
-                }
-                else
-                {
-                    DisableReportButtons();
-                    DisablePostCommentButton();
-                }
+                VerifyReportButton(blogPosts);
             }
-        }
-   
-        private void UpdateBlogPosts(List<Article> articles, string title, CancellationToken token)
-        {
-            //var articles = _articleService.GetArticleContent();
-            //var title = _articleService.GetPageTitle();
-            //if (dataGridView1.InvokeRequired) 
-            //    dataGridView1.Rows.Clear();
-
-            foreach (var article in articles)
-            {
-                if (token.IsCancellationRequested)
-                    token.ThrowIfCancellationRequested();
-                  
-                //Create a delagate for the above method
-                using (article)
-                {
-
-                    if (dataGridView1.InvokeRequired)
-                    {
-                        InsertRowGridFuncionality d = new InsertRowGridFuncionality(InsertRowGrid);
-                        this.Invoke(d, new object[] { article.Title, article.Overview, article.Link, article.Image });
-                    }
-                    else
-                        InsertRowGrid(article.Title, article.Overview, article.Link, article.Image);
-
-                }
-            }
-        }
+        }     
 
         private async void buttonPostComments_Click(object sender, EventArgs e)
         {
-
-            EnableGeishaGif();
-            ShowProcessStatusLabel();
-            EnableSharinGif();
-            EnableStopButton();
-            EnableStopLabel();
-
             _source = new CancellationTokenSource();
-
             var blogPosts = new Task(() => { });
+
+            EnableAnimations();
 
             try
             {
@@ -173,11 +117,11 @@ namespace WebScrapingDemo
                         _articleService.AddComment(articles[i], comments[i]);
                     }
 
-                    _commentService.PostComment(ids, articles, url,_source.Token);
+                    _commentService.PostComment(ids, articles, url, _source.Token);
                 }, _source.Token);
 
                 await blogPosts;
-              
+
             }
             catch (OperationCanceledException ex)
             {
@@ -191,30 +135,16 @@ namespace WebScrapingDemo
             }
             finally
             {
-                DisableGeishaGif();
-                HideProcessStatusLabel();
-                DisableSharinGif();
-                DisableStopLabel();
-                DisableStopButton();
+                DisableAnimations();
                 _source.Dispose();
 
-                if (!blogPosts.IsCanceled)
-                {
-                    EnableReportButtons();
-                    EnablePostCommentButton();
-                }
-                else
-                {
-                    DisableReportButtons();
-                    DisablePostCommentButton();
-                }
+                VerifyReportButton(blogPosts);
             }
         }
 
         private async void buttonTextReport_Click(object sender, EventArgs e)
         {
             _source = new CancellationTokenSource();
-
             var blogPosts = new Task(() => { });
 
             using (var fbd = new FolderBrowserDialog())
@@ -234,17 +164,17 @@ namespace WebScrapingDemo
                         {
                             _textReportService.CreateReport(articles, fbd.SelectedPath);
 
-                            MessageBox.Show("Saved successufuly!");
+                            MessageBox.Show("Saved successufuly!", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception ex)
                         {
                             _logger.Error(ex, ex.Message);
-                            MessageBox.Show("An error occurred while creating the report.");
+                            MessageBox.Show("An error occurred while creating the report.", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
 
                     }, _source.Token);
 
-                    await blogPosts;         
+                    await blogPosts;
                 }
 
             }
@@ -271,35 +201,29 @@ namespace WebScrapingDemo
                         {
                             _spreadSheetReportService.CreateReport(articles, fbd.SelectedPath);
 
-                            MessageBox.Show("Saved successufuly!");
+                            MessageBox.Show("Saved successufuly!", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception ex)
                         {
                             _logger.Error(ex, ex.Message);
-                            MessageBox.Show("An error occurred while creating the report.");
+                            MessageBox.Show("An error occurred while creating the report.", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }, _source.Token);
 
-                    await blogPosts;               
+                    await blogPosts;
                 }
             }
         }
 
         private async void buttonGetPrevious_Click(object sender, EventArgs e)
         {
-            //var articles = _articleService.GetPreviousPage();
-            //var title = _articleService.GetPageTitle();
             var blogPosts = new Task(() => { });
             var currentPage = "";
+            var wasCanceled = false;
             _source = new CancellationTokenSource();
 
-            EnableGeishaGif();
-            ShowProcessStatusLabel();
-            EnableSharinGif();
-            EnableStopButton();
-            EnableStopLabel();
-
-            dataGridView1.Rows.Clear();
+            EnableAnimations();
+            ClearGridRows();
 
             try
             {
@@ -320,56 +244,42 @@ namespace WebScrapingDemo
             }
             catch (OperationCanceledException ex)
             {
+                wasCanceled = true;
                 _logger.Warn(ex, ex.Message);
                 MessageBox.Show("Process was aborted!", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
+                wasCanceled = true;
                 _logger.Error(ex, ex.Message);
                 MessageBox.Show("An unexpected error occurred", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                DisableGeishaGif();
-                HideProcessStatusLabel();
-                DisableSharinGif();
-                DisableStopLabel();
-                DisableStopButton();
+
+                DisableAnimations();
                 _source.Dispose();
 
                 if (currentPage.Equals("Japão em Foco - Curiosidades e Cultura Japonesa"))
-                    DisablePreviousButton();                
+                    DisablePreviousButton();
 
-                if (!blogPosts.IsCanceled)
-                {
-                    EnableReportButtons();
-                    EnablePostCommentButton();
-                }
+                VerifyReportButton(blogPosts);
+
+                if (wasCanceled)
+                    VerifyReportButton(blogPosts, true);
                 else
-                {
-                    DisableReportButtons();
-                    DisablePostCommentButton();
-                    EnablePreviousButton();
-                }
+                    VerifyReportButton(blogPosts);
             }
         }
 
         private async void buttonNextPage_Click(object sender, EventArgs e)
         {
-            //var articles = _articleService.GetNextPage();
-            //var title = _articleService.GetPageTitle();
-
-            EnableGeishaGif();
-            ShowProcessStatusLabel();
-            EnableSharinGif();
-            EnableStopButton();
-            EnableStopLabel();
-
-            dataGridView1.Rows.Clear();
-
             _source = new CancellationTokenSource();
-
             var blogPosts = new Task(() => { });
+            var wasCanceled = false;
+
+            EnableAnimations();
+            ClearGridRows();
 
             try
             {
@@ -378,51 +288,40 @@ namespace WebScrapingDemo
                     var articles = _articleService.GetNextPage();
                     var title = _articleService.GetPageTitle();
 
-                    UpdateBlogPosts(articles, title,_source.Token);
+                    UpdateBlogPosts(articles, title, _source.Token);
                 }, _source.Token);
 
                 await blogPosts;
             }
             catch (OperationCanceledException ex)
             {
+                wasCanceled = true;
                 _logger.Warn(ex, ex.Message);
                 MessageBox.Show("Process was aborted!", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
+                wasCanceled = true;
                 _logger.Error(ex, ex.Message);
                 MessageBox.Show("An unexpected error occurred", "Process Report", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                DisableGeishaGif();
-                HideProcessStatusLabel();
-                DisableSharinGif();
-                DisableStopLabel();
-                DisableStopButton();
-                DisablePreviousButton();
 
+                DisablePreviousButton();
+                DisableAnimations();
                 _source.Dispose();
 
-                if (!blogPosts.IsCanceled)
-                {
-                    EnableReportButtons();
-                    EnablePostCommentButton();
-                    EnablePreviousButton();
-                    //DisablePreviousButton();
-                }
-                else
-                {
-                    DisableReportButtons();
-                    DisablePostCommentButton();
-                }
+                if(wasCanceled)
+                    VerifyReportButton(blogPosts);
+                else                    
+                    VerifyReportButton(blogPosts, true);
             }
         }
 
         private async void buttonCSVReport_Click(object sender, EventArgs e)
         {
             _source = new CancellationTokenSource();
-
             var blogPosts = new Task(() => { });
 
             using (var fbd = new FolderBrowserDialog())
@@ -467,24 +366,10 @@ namespace WebScrapingDemo
             }
         }
 
-        private void InsertRowGrid(string title, string overview, string link, Bitmap image)
+        private void stopButton_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Add(title, overview, link, image);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
+            processStatusLabel.Text = "O processo está sendo abortado...";
+            _source.Cancel();
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
@@ -493,6 +378,80 @@ namespace WebScrapingDemo
             aboutForm.Show();
         }
 
+        #endregion
+
+        #region Methods
+
+        // TODO: Extract the bellow methods to a partial class
+        private void DisableAnimations()
+        {
+            DisableGeishaGif();
+            HideProcessStatusLabel();
+            DisableSharinGif();
+            DisableStopLabel();
+            DisableStopButton();
+        }
+
+        private void EnableAnimations()
+        {
+            EnableGeishaGif();
+            ShowProcessStatusLabel();
+            EnableSharinGif();
+            EnableStopButton();
+            EnableStopLabel();
+        }
+
+        private void VerifyReportButton(Task blogPosts, bool enablePreviosButton = false)
+        {
+            if (!blogPosts.IsCanceled)
+            {
+                EnableReportButtons();
+                EnablePostCommentButton();
+            }
+            else
+            {
+                DisableReportButtons();
+                DisablePostCommentButton();
+            }
+
+            if (enablePreviosButton)
+                EnablePreviousButton();
+        }
+
+        private void UpdateBlogPosts(List<Article> articles, string title, CancellationToken token)
+        {
+
+            foreach (var article in articles)
+            {
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+                  
+                //Create a delagate for the above method
+                using (article)
+                {
+
+                    if (dataGridView1.InvokeRequired)
+                    {
+                        InsertRowGridFuncionality d = new InsertRowGridFuncionality(InsertRowGrid);
+                        this.Invoke(d, new object[] { article.Title, article.Overview, article.Link, article.Image });
+                    }
+                    else
+                        InsertRowGrid(article.Title, article.Overview, article.Link, article.Image);
+
+                }
+            }
+        }
+
+        private void InsertRowGrid(string title, string overview, string link, Bitmap image)
+        {
+            dataGridView1.Rows.Add(title, overview, link, image);
+        }
+
+        private void ClearGridRows()
+        {
+            dataGridView1.Rows.Clear();
+        }
+      
         private void EnableReportButtons()
         {
             buttonCSVReport.Enabled = true;
@@ -569,12 +528,6 @@ namespace WebScrapingDemo
             buttonPostComments.Enabled = false;
         }
 
-        private void stopButton_Click(object sender, EventArgs e)
-        {
-            processStatusLabel.Text = "O processo está sendo abortado...";
-            _source.Cancel();
-        }
-
         private void EnableStopButton()
         {
             stopButton.Visible = true;
@@ -594,6 +547,8 @@ namespace WebScrapingDemo
         {
             stopLabel.Visible = false;
         }
+
+        #endregion
     }
 }
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static WebScrapingDemo.MainForm;
+using System.Threading;
 
 namespace WebScrapingDemo
 {
@@ -49,7 +50,8 @@ namespace WebScrapingDemo
                                 new SpreadSheetReportService(),
                                 new TextReportService(),
                                 new CSVReportService(),
-                                new ArticleService(new Article("", "", ""))
+                                new ArticleService(new Article("", "", "")),
+                                new CancellationTokenSource()
                 ));
 
             // Optionally verify the container.

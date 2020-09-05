@@ -239,7 +239,6 @@
             this.japaoEmFoco.Size = new System.Drawing.Size(106, 16);
             this.japaoEmFoco.TabIndex = 8;
             this.japaoEmFoco.Text = "Japão em Foco";
-            this.japaoEmFoco.Click += new System.EventHandler(this.label1_Click);
             // 
             // label1
             // 
@@ -262,7 +261,6 @@
             this.label2.Size = new System.Drawing.Size(79, 16);
             this.label2.TabIndex = 10;
             this.label2.Text = "Navegação";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // buttonCSVReport
             // 
@@ -394,7 +392,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Robô Japão em Foco";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.stopButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
